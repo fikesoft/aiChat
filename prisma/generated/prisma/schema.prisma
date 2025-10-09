@@ -4,9 +4,9 @@ generator client {
 }
 
 datasource db {
-  provider          = "postgresql"
-  url               = env("DATABASE_URL")
-  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+  provider = "postgresql"
+  // pooled for runtime (PgBouncer)
+  url      = env("PRISMA_DATABASE_URL")
 }
 
 model User {
@@ -24,16 +24,16 @@ model User {
 model Account {
   id                String  @id @default(cuid())
   userId            String
-  type              String // <- REQUIRED by NextAuth
+  type              String
   provider          String
   providerAccountId String
   access_token      String?
   refresh_token     String?
   expires_at        Int?
-  token_type        String? // optional but common
-  scope             String? // optional but common
-  id_token          String? // optional but common
-  session_state     String? // optional but common
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
