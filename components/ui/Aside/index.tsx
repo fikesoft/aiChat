@@ -6,7 +6,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Home, History, LogIn, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import style from "./Aside.module.css";
+import "./Aside.module.css";
+import { NavMenu, NavMenuItem } from "./NavMenu";
+import AuthButton from "../Auth/AuthButton";
 const Aside = () => {
   const { data, status } = useSession();
   const pathname = usePathname();
@@ -17,25 +19,51 @@ const Aside = () => {
       : "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground";
 
   return (
-    <aside className={style.aside}>
-      <nav
-        className={
-          // Mobile dock surface; Desktop sidebar surface
+    <aside className="aside">
+      <nav className="nav">
+        <NavMenu>
+          <NavMenuItem className="hidden md:block md:mb-4">
+            {status === "unauthenticated" ? (
+              <AuthButton type="signIn" />
+            ) : status === "authenticated" ? (
+              <div className="flex items-center gap-3 p-2 rounded-lg bg-card border border-border">
+                <Avatar className="block h-9 w-9 rounded-full overflow-hidden">
+                  {data?.user?.image ? (
+                    <AvatarImage
+                      src={data.user.image}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <AvatarFallback className="text-xs">
+                      {data?.user?.email?.at(0)}
+                    </AvatarFallback>
+                  )}
+                </Avatar>
+                <div className="min-w-0">
+                  <p className="text-sm font-medium truncate">
+                    {data?.user?.name ?? "User"}
+                  </p>
+                  <p className="text-xs text-muted-foreground truncate">
+                    {data?.user?.email}
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <span className="text-sm text-muted-foreground">Checking…</span>
+            )}
+          </NavMenuItem>
+          <NavMenuItem>
+            <AuthButton type="signOut" />
+          </NavMenuItem>
+        </NavMenu>
+      </nav>
+    </aside>
+  );
+};
 
-          " md:border-t-0 md:border-r  " +
-          "shadow-lg md:shadow-none " +
-          // Height + safe area on mobile
-          "h-16 md:h-full px-3 md:px-4 " +
-        }
-      >
-        <ul
-          className={
-            // Mobile: horizontal dock; Desktop: vertical nav
-            "flex items-center justify-around h-full gap-1 " +
-            "md:flex-col md:items-stretch md:justify-start md:gap-2 md:py-4"
-          }
-        >
-          {/* Profile / auth */}
+export default Aside;
+/**
+ * <ul className={style.nav__menu}>
           <li className="hidden md:block md:mb-4">
             {status === "unauthenticated" ? (
               <Button
@@ -75,7 +103,6 @@ const Aside = () => {
             )}
           </li>
 
-          {/* Links */}
           <li>
             <Link
               href="/"
@@ -104,7 +131,6 @@ const Aside = () => {
             </Link>
           </li>
 
-          {/* Sign in/out button in the dock (mobile) */}
           <li className="md:hidden">
             {status === "authenticated" ? (
               <Button
@@ -127,7 +153,6 @@ const Aside = () => {
             )}
           </li>
 
-          {/* Desktop sign out */}
           <li className="hidden md:block mt-auto">
             {status === "authenticated" ? (
               <Button
@@ -141,9 +166,4 @@ const Aside = () => {
             ) : null}
           </li>
         </ul>
-      </nav>
-    </aside>
-  );
-};
-
-export default Aside;
+ */

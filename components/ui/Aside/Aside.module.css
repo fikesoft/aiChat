@@ -1,25 +1,20 @@
+@reference '../../../app/globals.css';
+
 .aside {
-  position: fixed;
-  bottom: 0;
-  z-index: 50;
-  left: 0;
-  right: 0;
-  inset-inline: 0;
+  /* Mobile: bottom dock */
+  @apply fixed inset-x-0 bottom-0 z-50;
+
+  /* Desktop: sticky left sidebar */
+  @apply md:sticky md:top-0 md:h-screen md:w-64 md:z-10;
 }
 
 .nav {
-  background-color: var(--popover);
-  color: var(--popover-foreground);
-  border-top: 1px solid var(--color-border);
-  box-shadow: ;
-}
+  /* Surface + border using your Tailwind token mappings */
+  @apply bg-popover text-popover-foreground border-t border-border;
 
-@media (min-width: 768px) {
-  .aside {
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    height: 100vh;
-    width: 16rem;
-  }
+  /* Shadow + responsive overrides */
+  @apply shadow-lg md:shadow-none;
+
+  /* Size/layout */
+  @apply h-16 md:h-full px-3 md:px-4;
 }
