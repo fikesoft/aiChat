@@ -1,0 +1,17 @@
+@reference '../../../app/globals.css';
+
+.aside {
+  /* Mobile: bottom dock */
+  @apply fixed inset-x-0 bottom-0 z-50 shadow-lg;
+
+  /* Desktop: sticky left sidebar */
+  @apply md:sticky md:top-0 md:h-screen md:w-64 md:z-10;
+}
+
+.nav {
+  @apply flex flex-col justify-around h-16 md:h-full px-3 md:px-4;
+  @apply bg-popover text-popover-foreground border-t border-border;
+  @apply shadow-lg md:shadow-none;
+    @apply md:bg-primary md:text-primary-foreground;
+
+}

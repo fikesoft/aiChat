@@ -1,0 +1,6 @@
+@reference "../../../../app/globals.css";
+
+.nav__menu {
+  @apply flex items-center justify-center h-full gap-1;
+  @apply md:flex-col md:items-stretch md:justify-start md:gap-2 md:py-4;
+}

@@ -1,0 +1,38 @@
+import { oai } from "@/lib/ai/openai";
+import { NextRequest, NextResponse } from "next/server";
+import { content } from "./promt";
+export const runtime = "edge";
+
+type Body = { code: string };
+
+export async function POST(req: NextRequest) {
+  try {
+    const { code, controller } = (await req.json()) as Body;
+    if (!code)
+      return NextResponse.json({ error: "Missing code" }, { status: 400 });
+
+    const resp = await oai.responses.create(
+      {
+        background: true,
+        stream: true,
+        model: "gpt-5-nano",
+        input: [
+          {
+            role: "developer",
+            content: content + code,
+          },
+          { role: "user", content: code },
+        ],
+        max_output_tokens: 4000,
+      },
+      {
+        signal: controller,
+      }
+    );
+
+    return NextResponse.json({ response: resp }, { status: 200 });
+  } catch (err) {
+    console.error(err);
+    return NextResponse.json({ error: String(err) }, { status: 500 });
+  }
+}
