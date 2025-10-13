@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState } from "react";
 import { useFetchData } from "@/hooks/useFetchData";
 import type {
-  IResponseDocCode,
+  DocCodeResult,
   TokensConsumptionType,
 } from "@/types/shared.types";
 import {
@@ -22,7 +22,7 @@ export default function Home() {
   const [tokensConsumption, setTokensConsumption] =
     useState<TokensConsumptionType>("medium");
   const { response, isLoading, error, run, cancel } =
-    useFetchData<IResponseDocCode>();
+    useFetchData<DocCodeResult>();
 
   const handleOnClickGenerate = () => {
     run({
@@ -31,11 +31,7 @@ export default function Home() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ code: text, level: tokensConsumption }),
     });
-    console.log(response);
   };
-  useEffect(() => {
-    console.log(isLoading + "state");
-  }, [isLoading]);
   return (
     <div className=" max-w-8/12 mx-auto pt-20">
       <div className="mb-6 col-span-2 justify-items-center">
@@ -100,10 +96,22 @@ export default function Home() {
         <Card className="border-border shadow-sm">
           <CardHeader className="pb-2">
             <CardTitle className="text-base font-medium">Output</CardTitle>
-            <p>Token consumption {response?.tokens}</p>
+            <p>Token consumption {response?.ok ? response?.tokens : 0}</p>
           </CardHeader>
           <CardContent>
-            <div>{response?.response}</div>
+            {isLoading && <p>Generating...</p>}
+            {response && !isLoading && (
+              <div className="md:min-h-[600px] md:max-h-[600px] min-h-[300px] max-h-[300px] overflow-y-scroll">
+                <pre className="whitespace-pre-wrap break-words">
+                  {eval(
+                    JSON.stringify(response?.ok ? response?.tokens : 0, null, 2)
+                  )}
+                </pre>
+              </div>
+            )}
+            {!response && !isLoading && !error && (
+              <p className="text-muted-foreground">No output</p>
+            )}
           </CardContent>
         </Card>
       </div>

@@ -3,7 +3,13 @@ export interface IRequestDocCode {
   code: string;
   level: TokensConsumptionType;
 }
-export interface IResponseDocCode {
+type DocCodeSuccess = {
+  ok: true;
   response: string;
-  tokens: number | undefined;
-}
+  tokens?: number;
+};
+type DocCodeError = {
+  ok: false;
+  error: string;
+};
+export type DocCodeResult = DocCodeSuccess | DocCodeError;

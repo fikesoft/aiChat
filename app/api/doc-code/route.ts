@@ -5,9 +5,9 @@ import type { IRequestDocCode } from "@/types/shared.types";
 export const runtime = "edge";
 
 const tokenConsumptionMap = {
-  low: { max_output_tokens: 400 },
-  medium: { max_output_tokens: 1200 },
-  high: { max_output_tokens: 3000 },
+  low: { max_output_tokens: 10000 },
+  medium: { max_output_tokens: 15000 },
+  high: { max_output_tokens: 17000 },
 } as const;
 
 const promtMap = {
@@ -23,12 +23,16 @@ export async function POST(req: NextRequest) {
     const tokenConsumptionObject =
       tokenConsumptionMap[level] ?? tokenConsumptionMap.medium;
     const promtObject = promtMap[level] ?? promtMap.medium;
+
     const resp = await oai.responses.create(
       {
         model: "gpt-5-nano",
+        reasoning: {
+          effort: "medium",
+        },
         input: [
           {
-            role: "developer",
+            role: "system",
             ...promtObject,
           },
           { role: "user", content: code },
@@ -39,7 +43,13 @@ export async function POST(req: NextRequest) {
         signal: req.signal,
       }
     );
-    console.log(resp.output_text);
+    console.log(resp);
+    if (resp.usage?.output_tokens === 0) {
+      throw new Error("Model returned 0 output tokens. Try again later");
+    }
+    if (resp.status == "incomplete") {
+      throw new Error(resp.incomplete_details?.reason ?? "Unknown error");
+    }
     return NextResponse.json(
       { response: resp.output_text, tokens: resp.usage?.total_tokens },
       { status: 200 }

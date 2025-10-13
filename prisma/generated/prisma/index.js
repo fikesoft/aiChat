@@ -157,7 +157,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/Users/sorin/Documents/petProjects/aiChat/prisma/generated/prisma",
+      "value": "C:\\Users\\schirtoaca\\Desktop\\react projects\\aiChat\\prisma\\generated\\prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -166,12 +166,12 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "darwin-arm64",
+        "value": "windows",
         "native": true
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/Users/sorin/Documents/petProjects/aiChat/prisma/schema.prisma",
+    "sourceFilePath": "C:\\Users\\schirtoaca\\Desktop\\react projects\\aiChat\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
